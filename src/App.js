@@ -7,6 +7,7 @@ import { EmployeeHomepage } from './components/employeeHomepage';
 import { NoMatch } from './components/noMatch';
 import { Navbar } from './components/navbar';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { userType, getCurrentUser, setCurrentUser } from './userType';
 
 const theme = createTheme({
   palette: {
@@ -21,14 +22,26 @@ const theme = createTheme({
   },
 });
 
+const renderHomepage = () => {
+  console.log(getCurrentUser())
+  switch(getCurrentUser()) {
+    case userType.client:
+      return <UserHomepage />
+    case userType.employee:
+      return <EmployeeHomepage />
+    case userType.none:
+      return <Homepage />
+    default:
+      return <Homepage />
+  }
+}
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <Navbar />
       <Routes>
-        <Route path='/' element={<Homepage />} />
-        <Route path='user' element={<UserHomepage />} />
-        <Route path='employee' element={<EmployeeHomepage />} />
+        <Route path='/' element={renderHomepage()}/>
         <Route path='*' element={<NoMatch />} />
       </Routes>
     </ThemeProvider>

@@ -1,11 +1,17 @@
 export const userType = Object.freeze({
-    client: Symbol("client"),
-    employee: Symbol("employee"),
-    none: Symbol("none")
+    client: "client",
+    employee: "employee",
+    none: "none"
 })
 
 export const getCurrentUser = () => {
-    localStorage.getItem('user')
+    let user = localStorage.getItem('user')
+    if (user != null) {
+        return user
+    }
+    else {
+        return userType.none
+    }
 }
 
 export const setCurrentUser = (user) => {
