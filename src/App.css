@@ -1,3 +1,39 @@
 .App {
   text-align: center;
 }
+
+.menu-button {
+  color: #faf7f0;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 10px 10px 10px 10px;
+  /* font-size: large; */
+  position: relative;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+}
+
+.menu-button:hover:after {
+  width: 100%;
+  left: 0;
+}
+
+.menu-button:after {
+  background: none repeat scroll 0 0 transparent;
+  bottom: 0;
+  content: '';
+  display: block;
+  height: 2px;
+  left: 50%;
+  position: absolute;
+  background: #faf7f0;
+  transition: width 0.2s ease 0s, left 0.2s ease 0s;
+  width: 0;
+}
+
+.menu {
+  padding: 2vh 1vw 2vh 1vw;
+  display: flex;
+  justify-content: space-between;
+  background-color: #7ec3a6;
+}

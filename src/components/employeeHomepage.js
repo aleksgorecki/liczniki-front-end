@@ -4,22 +4,23 @@ import userIconPath from '../resources/icons/user-line.svg'
 import employeeIconPath from '../resources/icons/tools-line.svg'
 import { Container } from '@mui/system';
 
-
-export const Homepage = () => {
-
+export const EmployeeHomepage = () => {
     return(
         <Container maxWidth='sm'>
             <Paper sx={{p: 2}}>
                 <Stack>
                     <Typography variant='h5'>
-                        Kto używa aplikacji?
+                        Panel pracownika
                     </Typography>
                     <Divider sx={{mt: 2}} />
                     <Button sx={{mt: 2}} component={NavLink} to='user' variant='contained' size='large' startIcon={<img src={userIconPath}  fill='white' alt='user'/>}>
-                        Klient
+                        Odczyty domu
                     </Button>
                     <Button sx={{mt: 2}} component={NavLink} to='employee' variant='contained' size='large' startIcon={<img src={employeeIconPath} alt='employee'/>}>
-                        Pracownik
+                        Domy
+                    </Button>
+                    <Button sx={{mt: 2}} component={NavLink} to='' variant='outlined' size='large' startIcon={<img src={employeeIconPath} alt='employee'/>}>
+                        Wyjście
                     </Button>
                 </Stack>
             </Paper>
