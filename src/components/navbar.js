@@ -4,8 +4,19 @@ import '../App.css';
 import Box from '@mui/material/Box';
 import userIconPath from '../resources/icons/user-line.svg'
 import employeeIconPath from '../resources/icons/tools-line.svg'
+import { userType, setCurrentUser, getCurrentUser } from '../userType';
 
 export const Navbar = (props) => {
+
+    const clientOnClick = () => {
+        setCurrentUser(userType.client)
+        window.location.reload()
+    }
+    
+    const employeeOnClick = () => {
+        setCurrentUser(userType.employee)
+        window.location.reload()
+    }
 
     return (
         <>
@@ -16,12 +27,12 @@ export const Navbar = (props) => {
                     </Typography>
                 </Link>
                 <Stack direction='row'>
-                    <NavLink className='menu-button' to='user'>
-                    <Stack direction='horizontal'>
+                    <NavLink className='menu-button' to='/' onClick={clientOnClick}>
+                        <Stack direction='horizontal'>
                             <img src={userIconPath} fill='white' alt='user'/>
                         </Stack>
                     </NavLink>
-                    <NavLink className='menu-button' to='employee'>
+                    <NavLink className='menu-button' to='/' onClick={employeeOnClick}>
                         <Stack direction='horizontal'>
                             <img src={employeeIconPath} fill='white' alt='employee'/>
                         </Stack>
