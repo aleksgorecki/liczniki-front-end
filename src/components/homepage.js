@@ -8,8 +8,6 @@ import { userType, getCurrentUser, setCurrentUser } from '../userType';
 
 export const Homepage = () => {
 
-    let navigate = useNavigate();
-
     const clientOnClick = () => {
         setCurrentUser(userType.client)
         window.location.reload()

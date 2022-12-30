@@ -1,12 +1,12 @@
 import { Typography, Paper, Container } from "@mui/material"
 
-export const NoMatch = () => {
+export const WrongUser = () => {
     return (
         <>
         <Container maxWidth='sm'>
             <Paper sx={{p: 2}}>
                 <Typography variant="h5" align="center">
-                    Nie znaleziono strony
+                    Użytkownik nie posiada wymaganych uprawnień do przeglądania tej strony
                 </Typography>
             </Paper>
         </Container>

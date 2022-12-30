@@ -7,8 +7,6 @@ import { userType, setCurrentUser } from '../userType';
 
 export const UserHomepage = () => {
 
-    let navigate = useNavigate();
-
     const exitOnClick = () => {
         setCurrentUser(userType.none)
         window.location.reload()

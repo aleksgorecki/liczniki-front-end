@@ -6,8 +6,7 @@ import { Container } from '@mui/system';
 import { userType, setCurrentUser } from '../userType';
 
 export const EmployeeHomepage = () => {
-    let navigate = useNavigate();
-
+    
     const exitOnClick = () => {
         setCurrentUser(userType.none)
         window.location.reload()
