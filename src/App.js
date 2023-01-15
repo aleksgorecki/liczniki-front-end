@@ -46,7 +46,7 @@ function App() {
         <Route path='/' element={renderHomepage()}/>
         <Route path='*' element={<NoMatch />} />
         <Route path="find-house" element={<FindHouse />} />
-        <Route path="house-details" element={<HouseDetails />} />
+        <Route path="house-details/:id" element={<HouseDetails />} />
         <Route path="houses" element={<Houses />} />
       </Routes>
     </ThemeProvider>

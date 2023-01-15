@@ -49,7 +49,7 @@ export const FindHouse = () => {
                         m: 1
                 }}>
                     </TextField>
-                    <Button id='buttonFind' variant='text' disabled={!buttonEnabled} component={NavLink} to={`house-details?id=${houseId}`} sx={{
+                    <Button id='buttonFind' variant='text' disabled={!buttonEnabled} component={NavLink} to={`/house-details/${houseId}`} sx={{
                         flexGrow: 2,
                         m: 1 
                 }}>
