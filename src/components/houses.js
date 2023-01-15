@@ -1,4 +1,4 @@
-import {Paper, Box, TextField, Button, Skeleton, Typography} from '@mui/material';
+import {Paper, Box, TextField, Button, Skeleton, Typography, DialogTitle} from '@mui/material';
 import { Container } from '@mui/system';
 import { userType, setCurrentUser } from '../userType';
 import { useEffect, useState } from 'react';
@@ -11,6 +11,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { grey } from '@mui/material/colors';
+import { DialogContent, Dialog, DialogContentText, DialogActions } from '@mui/material';
 
 
 
@@ -22,6 +23,10 @@ export const Houses = () => {
     const [textFieldError, setTextFieldError] = useState(false)
     const [textFieldErrorText, setTextFieldErrorText] = useState(' ')
     const [houseName, setHouseName] = useState(null)
+    const [open, setOpen] = useState(false)
+    const [editName, setEditName] = useState(null);
+    const [editId, setEditId] = useState(null);
+    const [isEditing, setIsEditing] = useState(false)
     var previousTableHeight = 0;
 
     const navigate = useNavigate();
@@ -97,32 +102,72 @@ export const Houses = () => {
         if (houseName == null) {
             return;
         }
-        setButtonEnabled(false);
-        setActionsEnabled(false);
-        axios
-        .post(`/api/House/addOrUpdateHouse`, {'name': houseName}, config)
-        .then( (res) => {
+        if (!isEditing) {
+            setButtonEnabled(false);
+            setActionsEnabled(false);
             axios
-            .get('/api/House/getAllHouses', config)
-            .then( (res1) => {
-                setHouses(res1.data)
-                setButtonEnabled(true);
-                setActionsEnabled(true);
+            .post(`/api/House/addOrUpdateHouse`, {'name': houseName}, config)
+            .then( (res) => {
+                axios
+                .get('/api/House/getAllHouses', config)
+                .then( (res1) => {
+                    setHouses(res1.data)
+                    setButtonEnabled(true);
+                    setActionsEnabled(true);
+                })
+                .catch((error) => {
+                    console.log(error)
+                    setButtonEnabled(true);
+                    setActionsEnabled(true);
+            });
             })
             .catch((error) => {
                 console.log(error)
                 setButtonEnabled(true);
                 setActionsEnabled(true);
         });
-        })
-        .catch((error) => {
-            console.log(error)
-            setButtonEnabled(true);
-            setActionsEnabled(true);
-    });
+        }
+        else {
+            setButtonEnabled(false);
+            setActionsEnabled(false);
+            axios
+            .post(`/api/House/addOrUpdateHouse`, {id: editId, name: houseName}, config)
+            .then( (res) => {
+                axios
+                .get('/api/House/getAllHouses', config)
+                .then( (res1) => {
+                    setHouses(res1.data)
+                    setButtonEnabled(true);
+                    setActionsEnabled(true);
+                })
+                .catch((error) => {
+                    console.log(error)
+                    setButtonEnabled(true);
+                    setActionsEnabled(true);
+            });
+            })
+            .catch((error) => {
+                console.log(error)
+                setButtonEnabled(true);
+                setActionsEnabled(true);
+        });
+        setIsEditing(false);
+        setHouseName('');
+        } 
+    }
+    
+    const onClickEdit = (id, name) => {
+        setEditId(id);
+        setHouseName(name);
+        setIsEditing(true);
     }
 
-    return(
+    const onClickCancelEdit = () => {
+        setIsEditing(false);
+        setHouseName('');
+    }
+
+    return (
         <Container maxWidth='sm'>
             <Paper sx={{p: 2}}>
                 <Box sx={{
@@ -130,7 +175,7 @@ export const Houses = () => {
                     flexDirection: 'row',
                     justifyContent: 'flex-start',
                 }}>
-                    <TextField helperText={textFieldErrorText} error={textFieldError} onChange={(e) => onTextChanged(e.target.value)} id='textFieldAdd' placeholder='Nazwa domu' variant='standard' sx={{
+                    <TextField value={houseName} helperText={textFieldErrorText} error={textFieldError} onChange={(e) => onTextChanged(e.target.value)} id='textFieldAdd' placeholder='Nazwa domu' variant='standard' sx={{
                         flexGrow: 3,
                         m: 1
                 }}>
@@ -139,8 +184,15 @@ export const Houses = () => {
                         flexGrow: 2,
                         m: 1 
                 }}>
-                        Dodaj dom
+                        {!isEditing ? 'Dodaj dom' : 'Zapisz zmiany'}
                     </Button>
+                    {isEditing ? (
+                        <Button color='secondary' onClick={onClickCancelEdit}>
+                            Anuluj edycję
+                        </Button>
+                    ) : (
+                        null
+                    )}
                 </Box>
             </Paper>
             <Paper sx={{p: 2, mt: 3}}>
@@ -173,10 +225,13 @@ export const Houses = () => {
                                         {house.name}
                                     </TableCell>
                                     <TableCell align='center'>
-                                        <Button disabled={!actionsEnabled} component={NavLink} to={`/house-details/${house.id}`}>
-                                            Szczegóły
+                                        <Button align='center' disabled={!actionsEnabled} component={NavLink} to={`/house-details/${house.id}`}>
+                                            Liczniki
                                         </Button>
-                                        <Button disabled={!actionsEnabled} onClick={() => onClickDelete(house.id)}>
+                                        <Button align='center' disabled={!actionsEnabled} onClick={() => onClickEdit(house.id, house.name)}>
+                                            Edytuj
+                                        </Button>
+                                        <Button color='secondary' align='center' disabled={!actionsEnabled} onClick={() => onClickDelete(house.id)}>
                                             Usuń
                                         </Button>
                                     </TableCell>
