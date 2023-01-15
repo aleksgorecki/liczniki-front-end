@@ -28,12 +28,12 @@ export const Navbar = (props) => {
                 </Link>
                 <Stack direction='row'>
                     <NavLink className='menu-button' to='/' onClick={clientOnClick}>
-                        <Stack direction='horizontal'>
+                        <Stack direction='row'>
                             <img src={userIconPath} fill='white' alt='user'/>
                         </Stack>
                     </NavLink>
                     <NavLink className='menu-button' to='/' onClick={employeeOnClick}>
-                        <Stack direction='horizontal'>
+                        <Stack direction='row'>
                             <img src={employeeIconPath} fill='white' alt='employee'/>
                         </Stack>
                     </NavLink>
