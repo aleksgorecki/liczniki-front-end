@@ -20,11 +20,11 @@ export const FindHouse = () => {
             setTextFieldError(false);
             setTextFieldErrorText(' ');
         }
-        else if (isNaN(value)) {
+        else if (isNaN(value) || value.startsWith('-')) {
             setHouseId(null)
             setButtonEnabled(false);
             setTextFieldError(true);
-            setTextFieldErrorText("Id domu musi być liczbą całkowitą");
+            setTextFieldErrorText("Id domu musi być nieujemną liczbą całkowitą");
         }
         else {
             setHouseId(value);

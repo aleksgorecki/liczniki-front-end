@@ -4,6 +4,7 @@ import { userType, getCurrentUser } from '../userType';
 
 export const HouseDetails = () => {
 
+    const houseNotFoundMessage = "Dom o podanym Id nie istnieje. Wróć na poprzednią stronę i spróbuj ponownie."
 
     const dummyHouse = {
         id: 10,
@@ -20,9 +21,8 @@ export const HouseDetails = () => {
         ]
     }
 
-
     return(
-        <Container maxWidth='lg'>
+        <Container maxWidth='md'>
             <Paper sx={{p: 2}}>
                 asdasd
             </Paper>
