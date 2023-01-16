@@ -11,6 +11,8 @@ import { NavLink } from 'react-router-dom';
 
 export default function DatabaseErrorDialog(props) {
 
+    const [open, setOpen] = useState(false);
+
     return (
         <>
             <Dialog open={props.isOpen} onClose={() => props.handleClose()}>
@@ -25,5 +27,6 @@ export default function DatabaseErrorDialog(props) {
                     <Button color='secondary' component={NavLink} to={`/`} onClick={() => props.handleClose()}>Strona główna</Button>
                 </DialogActions>
             </Dialog>
+            <DatabaseErrorDialog isOpen={open} handleClose={() => setOpen(false)}/>
         </>
   )};

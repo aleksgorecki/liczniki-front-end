@@ -26,7 +26,6 @@ export const Houses = () => {
     const [open, setOpen] = useState(false)
     const [editId, setEditId] = useState(null);
     const [isEditing, setIsEditing] = useState(false)
-    var previousTableHeight = 0;
 
     const navigate = useNavigate();
 
@@ -251,7 +250,7 @@ export const Houses = () => {
                         Brak domów w bazie danych
                     </Typography>
                 )}
-                <DatabaseErrorDialog isOpen={open} handleClose={() => setOpen(false)} />
+                {/* <DatabaseErrorDialog isOpen={open} handleClose={() => setOpen(false)} /> */}
             </Paper>
         </Container>
     )

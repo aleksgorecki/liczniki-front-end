@@ -20,10 +20,10 @@ export const EmployeeHomepage = () => {
                         Panel pracownika
                     </Typography>
                     <Divider sx={{mt: 2}} />
-                    <Button sx={{mt: 2}} component={NavLink} to='find-house' variant='contained' size='large' startIcon={<img src={houseIconPath}  fill='white' alt='user'/>}>
+                    <Button sx={{mt: 2}} component={NavLink} to='/find-house' variant='contained' size='large' startIcon={<img src={houseIconPath}  fill='white' alt='user'/>}>
                         Szczegóły domu
                     </Button>
-                    <Button sx={{mt: 2}} component={NavLink} to='houses' variant='contained' size='large' startIcon={<img src={listIconPath} alt='employee'/>}>
+                    <Button sx={{mt: 2}} component={NavLink} to='/houses' variant='contained' size='large' startIcon={<img src={listIconPath} alt='employee'/>}>
                         Wszystkie domy
                     </Button>
                     <Button sx={{mt: 2}} onClick={exitOnClick} variant='outlined' size='large' alt='employee'>
