@@ -78,7 +78,7 @@ export const Houses = () => {
         axios
         .get(`/api/Meter/getMeterValuesForHouse?id=${id}`, config)
         .then( (res1) => {
-            if (res1.data.waterMeter.length > 0 || res1.data.electricityMeter > 0  ) {
+            if ((res1.data.waterMeter.length > 0) || (res1.data.electricityMeter.length > 0)  ) {
                 setActionsEnabled(true);
                 setopenDeleteError(true);
                 return;
@@ -104,7 +104,7 @@ export const Houses = () => {
                 .catch((error) => {
                     console.log(error)
                     setButtonEnabled(true);
-                    setActionsEnabled(false);
+                    setActionsEnabled(true);
                     setOpen(true)
             });
             onClickCancelEdit();
