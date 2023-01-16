@@ -12,7 +12,7 @@ import TableRow from '@mui/material/TableRow';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { grey } from '@mui/material/colors';
 import { DialogContent, Dialog, DialogContentText, DialogActions } from '@mui/material';
-
+import DatabaseErrorDialog from './databaseErrorDialog';
 
 
 export const Houses = () => {
@@ -24,7 +24,6 @@ export const Houses = () => {
     const [textFieldErrorText, setTextFieldErrorText] = useState(' ')
     const [houseName, setHouseName] = useState(null)
     const [open, setOpen] = useState(false)
-    const [editName, setEditName] = useState(null);
     const [editId, setEditId] = useState(null);
     const [isEditing, setIsEditing] = useState(false)
     var previousTableHeight = 0;
@@ -46,6 +45,7 @@ export const Houses = () => {
             setHouses(res.data)
         })
         .catch((error) => {
+            setOpen(true)
             console.log(error)
     });
     }, [])
@@ -89,12 +89,14 @@ export const Houses = () => {
                 console.log(error)
                 setButtonEnabled(true);
                 setActionsEnabled(true);
+                setOpen(true)
         });
         })
         .catch((error) => {
             console.log(error)
             setButtonEnabled(true);
             setActionsEnabled(false);
+            setOpen(true)
     });
     }
 
@@ -119,12 +121,14 @@ export const Houses = () => {
                     console.log(error)
                     setButtonEnabled(true);
                     setActionsEnabled(true);
+                    setOpen(true)
             });
             })
             .catch((error) => {
                 console.log(error)
                 setButtonEnabled(true);
                 setActionsEnabled(true);
+                setOpen(true)
         });
         }
         else {
@@ -144,12 +148,14 @@ export const Houses = () => {
                     console.log(error)
                     setButtonEnabled(true);
                     setActionsEnabled(true);
+                    setOpen(true)
             });
             })
             .catch((error) => {
                 console.log(error)
                 setButtonEnabled(true);
                 setActionsEnabled(true);
+                setOpen(true)
         });
         setIsEditing(false);
         setHouseName('');
@@ -245,6 +251,7 @@ export const Houses = () => {
                         Brak domów w bazie danych
                     </Typography>
                 )}
+                <DatabaseErrorDialog isOpen={open} handleClose={() => setOpen(false)} />
             </Paper>
         </Container>
     )

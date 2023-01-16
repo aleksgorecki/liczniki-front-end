@@ -1,4 +1,4 @@
-import {Paper, Typography} from '@mui/material';
+import {Paper, Typography, Stack} from '@mui/material';
 import { Container } from '@mui/system';
 import { userType, getCurrentUser } from '../userType';
 import { useParams } from 'react-router-dom';
@@ -49,16 +49,24 @@ export const HouseDetails = () => {
         <Container maxWidth='md'>
             <Paper sx={{p: 2}}>
                 {!notFound ? (
-                    <Typography>
-                        Odczyty dla domu {houseName} (Id {houseId})
+                    <Typography variant='h5'>
+                        Odczyty dla {houseName} (Id {houseId})
                     </Typography>
                 ) : (
-                    <Typography>
+                    <Typography variant='h5'>
                         Dom o podanym Id nie istnieje. Wróć na poprzednią stronę i spróbuj ponownie.
                     </Typography>
                 )}
 
             </Paper>
+            <Stack direction='row'>
+            <Paper>
+                aasdasd
+            </Paper>
+            <Paper>
+                asdadas
+            </Paper>
+            </Stack>
         </Container>
     )
 }
