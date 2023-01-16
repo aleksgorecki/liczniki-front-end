@@ -18,7 +18,7 @@ import DatabaseErrorDialog from './databaseErrorDialog';
 export const Houses = () => {
     
     const [houses, setHouses] = useState([]);
-    const [buttonEnabled, setButtonEnabled] = useState(false)
+    const [buttonEnabled, setButtonEnabled] = useState(true)
     const [actionsEnabled, setActionsEnabled] = useState(true)
     const [textFieldError, setTextFieldError] = useState(false)
     const [textFieldErrorText, setTextFieldErrorText] = useState(' ')
@@ -55,12 +55,6 @@ export const Houses = () => {
             setButtonEnabled(false);
             setTextFieldError(true);
             setTextFieldErrorText('Nazwa domu może być złożona jedynie ze znaków alfanumerycznych')
-        }
-        else if (value === "") {
-            setHouseName(null)
-            setButtonEnabled(false);
-            setTextFieldError(true);
-            setTextFieldErrorText('Nazwa domu nie może być pusta')
         }
         else {
             setHouseName(value)
@@ -129,6 +123,7 @@ export const Houses = () => {
                 setActionsEnabled(true);
                 setOpen(true)
         });
+        setHouseName('');
         }
         else {
             setButtonEnabled(false);
