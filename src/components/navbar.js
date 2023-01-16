@@ -1,5 +1,5 @@
 import { Stack, Typography } from '@mui/material';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import '../App.css';
 import Box from '@mui/material/Box';
 import userIconPath from '../resources/icons/user-line.svg'
@@ -8,14 +8,18 @@ import { userType, setCurrentUser, getCurrentUser } from '../userType';
 
 export const Navbar = (props) => {
 
+    const navigate = useNavigate();
+
     const clientOnClick = () => {
         setCurrentUser(userType.client)
-        window.location.reload()
+        navigate('/')
+        //window.location.reload()
     }
     
     const employeeOnClick = () => {
         setCurrentUser(userType.employee)
-        window.location.reload()
+        navigate('/')
+        //window.location.reload()
     }
 
     return (

@@ -26,6 +26,7 @@ export const Houses = () => {
     const [open, setOpen] = useState(false)
     const [editId, setEditId] = useState(null);
     const [isEditing, setIsEditing] = useState(false)
+    const [openDeleteError, setopenDeleteError] = useState(false);
 
     const navigate = useNavigate();
 
@@ -51,7 +52,7 @@ export const Houses = () => {
 
     const onTextChanged = (value) => {
         if (!value.match(/^[\p{L}\p{N}]*$/u)) {
-            setHouseName(null)
+            setHouseName(value)
             setButtonEnabled(false);
             setTextFieldError(true);
             setTextFieldErrorText('Nazwa domu może być złożona jedynie ze znaków alfanumerycznych')
@@ -60,35 +61,52 @@ export const Houses = () => {
             setHouseName(value)
             setButtonEnabled(true);
             setTextFieldError(false);
-            setTextFieldErrorText('')
+            setTextFieldErrorText(' ')
         }
     }
 
     const onClickDelete = (id) => {
-        setButtonEnabled(false);
         setActionsEnabled(false);
         console.log(id)
+
         axios
-        .delete(`/api/House/deleteHouse?id=${id}`, {data: {'id': id}, config: config})
-        .then( (res) => {
-            axios
-            .get('/api/House/getAllHouses', config)
-            .then( (res1) => {
-                setHouses(res1.data)
-                setButtonEnabled(true);
+        .get(`/api/Meter/getMeterValuesForHouse?id=${id}`, config)
+        .then( (res1) => {
+            if (res1.data.waterMeter.length > 0 || res1.data.electricityMeter > 0  ) {
                 setActionsEnabled(true);
-            })
-            .catch((error) => {
-                console.log(error)
-                setButtonEnabled(true);
-                setActionsEnabled(true);
-                setOpen(true)
-        });
+                setopenDeleteError(true);
+                return;
+            }
+            else{
+                axios
+                .delete(`/api/House/deleteHouse?id=${id}`, {data: {'id': id}, config: config})
+                .then( (res) => {
+                    axios
+                    .get('/api/House/getAllHouses', config)
+                    .then( (res1) => {
+                        setHouses(res1.data)
+                        setButtonEnabled(true);
+                        setActionsEnabled(true);
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                        setButtonEnabled(true);
+                        setActionsEnabled(true);
+                        setOpen(true)
+                });
+                })
+                .catch((error) => {
+                    console.log(error)
+                    setButtonEnabled(true);
+                    setActionsEnabled(false);
+                    setOpen(true)
+            });
+            onClickCancelEdit();
+            }
         })
         .catch((error) => {
             console.log(error)
-            setButtonEnabled(true);
-            setActionsEnabled(false);
+            setActionsEnabled(true);
             setOpen(true)
     });
     }
@@ -152,7 +170,7 @@ export const Houses = () => {
                 setOpen(true)
         });
         setIsEditing(false);
-        setHouseName('');
+        setHouseName(' ');
         } 
     }
     
@@ -164,30 +182,33 @@ export const Houses = () => {
 
     const onClickCancelEdit = () => {
         setIsEditing(false);
-        setHouseName('');
+        setHouseName(' ');
     }
 
     return (
-        <Container maxWidth='sm'>
+        <Container maxWidth='md' sx={{ mb: 8 }}>
             <Paper sx={{p: 2}}>
                 <Box sx={{
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'flex-start',
-                }}>
+                    }}>
                     <TextField value={houseName} helperText={textFieldErrorText} error={textFieldError} onChange={(e) => onTextChanged(e.target.value)} id='textFieldAdd' placeholder='Nazwa domu' variant='standard' sx={{
-                        flexGrow: 3,
+                        flexGrow: 1,
                         m: 1
-                }}>
+                        }}>
                     </TextField>
-                    <Button id='buttonAdd' onClick={onClickAdd} variant='text' disabled={!buttonEnabled} sx={{
-                        flexGrow: 2,
+                    <Button id='buttonAdd' onClick={onClickAdd} variant='outlined' disabled={!buttonEnabled} sx={{
+                        flexGrow: 1,
                         m: 1 
-                }}>
+                        }}>
                         {!isEditing ? 'Dodaj dom' : 'Zapisz zmiany'}
                     </Button>
                     {isEditing ? (
-                        <Button color='secondary' onClick={onClickCancelEdit}>
+                        <Button color='secondary' variant='outlined' onClick={onClickCancelEdit} sx={{
+                            flexGrow: 1,
+                            m: 1 
+                        }}>
                             Anuluj edycję
                         </Button>
                     ) : (
@@ -217,7 +238,7 @@ export const Houses = () => {
                                 <TableRow
                                     style={{ textDecoration: 'none', color: 'inherit' }}
                                     key={house.id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, ':hover': {backgroundColor: '#faf7f0' }}}>
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 }}}>
                                     <TableCell align='center'>
                                         {house.id}
                                     </TableCell>
@@ -225,13 +246,13 @@ export const Houses = () => {
                                         {house.name}
                                     </TableCell>
                                     <TableCell align='center'>
-                                        <Button align='center' disabled={!actionsEnabled} component={NavLink} to={`/house-details/${house.id}`}>
-                                            Liczniki
+                                        <Button align='center' variant='text' disabled={!actionsEnabled} component={NavLink} to={`/house-details/${house.id}`} sx={{m: 0.5}}>
+                                            Odczyty
                                         </Button>
-                                        <Button align='center' disabled={!actionsEnabled} onClick={() => onClickEdit(house.id, house.name)}>
+                                        <Button align='center' variant='text' disabled={!actionsEnabled} onClick={() => onClickEdit(house.id, house.name)} sx={{m: 0.5}}>
                                             Edytuj
                                         </Button>
-                                        <Button color='secondary' align='center' disabled={!actionsEnabled} onClick={() => onClickDelete(house.id)}>
+                                        <Button color='secondary' variant='text' align='center' disabled={!actionsEnabled} onClick={() => onClickDelete(house.id)} sx={{m: 0.5}}>
                                             Usuń
                                         </Button>
                                     </TableCell>
@@ -246,6 +267,22 @@ export const Houses = () => {
                     </Typography>
                 )}
                 <DatabaseErrorDialog isOpen={open} handleClose={() => setOpen(false)} />
+                <Dialog
+                    open={openDeleteError}
+                    onClose={() => setopenDeleteError(false)}
+                    >
+                    <DialogTitle>
+                        Bład
+                    </DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Nie można usunąć wybranego domu, ponieważ w bazie danych znajdują się powiązane z nim odczyty liczników
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                    <Button onClick={() => setopenDeleteError(false)}>OK</Button>
+                    </DialogActions>
+                </Dialog>
             </Paper>
         </Container>
     )
