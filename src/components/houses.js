@@ -250,7 +250,7 @@ export const Houses = () => {
                         Brak domów w bazie danych
                     </Typography>
                 )}
-                {/* <DatabaseErrorDialog isOpen={open} handleClose={() => setOpen(false)} /> */}
+                <DatabaseErrorDialog isOpen={open} handleClose={() => setOpen(false)} />
             </Paper>
         </Container>
     )
