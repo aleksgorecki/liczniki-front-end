@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import userIconPath from '../resources/icons/user-line.svg'
 import employeeIconPath from '../resources/icons/tools-line.svg'
 import { userType, setCurrentUser, getCurrentUser } from '../userType';
+import { useEffect } from 'react';
 
 export const Navbar = (props) => {
 
@@ -12,14 +13,16 @@ export const Navbar = (props) => {
 
     const clientOnClick = () => {
         setCurrentUser(userType.client)
-        navigate('/')
-        //window.location.reload()
+        setTimeout(() => {
+            navigate(0)
+          }, "300")
     }
     
     const employeeOnClick = () => {
         setCurrentUser(userType.employee)
-        navigate('/')
-        //window.location.reload()
+        setTimeout(() => {
+            navigate(0)
+          }, "300")
     }
 
     return (

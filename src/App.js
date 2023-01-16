@@ -10,6 +10,7 @@ import { userType, getCurrentUser} from './userType';
 import { HouseDetails } from './components/houseDetails';
 import { Houses } from './components/houses';
 import { FindHouse } from './components/findHouse';
+import { WrongUser } from './components/wrongUser';
 
 const theme = createTheme({
   palette: {
@@ -48,6 +49,7 @@ function App() {
         <Route path="find-house" element={<FindHouse />} />
         <Route path="house-details/:id" element={<HouseDetails />} />
         <Route path="houses" element={<Houses />} />
+        <Route path='wrong-user' element={<WrongUser/>}/>
       </Routes>
     </ThemeProvider>
   );

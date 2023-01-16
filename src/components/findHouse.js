@@ -1,10 +1,12 @@
 import {Button, Paper, TextField, Box, FormHelperText} from '@mui/material';
 import { Container } from '@mui/system';
 import { useState, useRef } from 'react';
-import {NavLink} from 'react-router-dom'
+import {NavLink, useNavigate} from 'react-router-dom'
+import { getCurrentUser, userType } from '../userType';
 
 export const FindHouse = () => {
 
+    const navigate = useNavigate();
     const [houseId, setHouseId] = useState(null);
     const [buttonEnabled, setButtonEnabled] = useState(false)
     const [textFieldError, setTextFieldError] = useState(false)
@@ -38,6 +40,16 @@ export const FindHouse = () => {
 
     return(
         <Container maxWidth='sm'>
+            <Button onClick={() => {
+                if (getCurrentUser() === userType.employee) {
+                    navigate('/')
+                }
+                else {
+                    navigate('/')
+                }
+            }}>
+                Powrót
+            </Button>
             <Paper sx={{p: 1}}>
                 <Box sx={{
                     display: 'flex',

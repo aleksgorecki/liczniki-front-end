@@ -1,6 +1,6 @@
 import {Paper, Box, TextField, Button, Skeleton, Typography, DialogTitle} from '@mui/material';
 import { Container } from '@mui/system';
-import { userType, setCurrentUser } from '../userType';
+import { userType, setCurrentUser, getCurrentUser } from '../userType';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Table from '@mui/material/Table';
@@ -17,6 +17,8 @@ import DatabaseErrorDialog from './databaseErrorDialog';
 
 export const Houses = () => {
     
+    const navigate = useNavigate();
+
     const [houses, setHouses] = useState([]);
     const [buttonEnabled, setButtonEnabled] = useState(true)
     const [actionsEnabled, setActionsEnabled] = useState(true)
@@ -27,9 +29,7 @@ export const Houses = () => {
     const [editId, setEditId] = useState(null);
     const [isEditing, setIsEditing] = useState(false)
     const [openDeleteError, setopenDeleteError] = useState(false);
-
-    const navigate = useNavigate();
-
+    const [wrongUser, setWrongUSer] = useState(false);
 
     const config = {
         headers: {
@@ -38,6 +38,12 @@ export const Houses = () => {
     };
 
     useEffect( () => {
+
+        if (getCurrentUser() !== userType.employee) {
+            setWrongUSer(true);
+            return;
+        }
+
         axios
         .get('/api/House/getAllHouses', config)
         .then( (res) => {
@@ -186,7 +192,19 @@ export const Houses = () => {
     }
 
     return (
+        <>
+        {getCurrentUser() === userType.employee ? (
         <Container maxWidth='md' sx={{ mb: 8 }}>
+            <Button onClick={() => {
+                if (getCurrentUser() === userType.employee) {
+                    navigate('/')
+                }
+                else {
+                    navigate('/')
+                }
+            }}>
+                Powrót
+            </Button>
             <Paper sx={{p: 2}}>
                 <Box sx={{
                     display: 'flex',
@@ -216,7 +234,7 @@ export const Houses = () => {
                     )}
                 </Box>
             </Paper>
-            <Paper sx={{p: 2, mt: 3}}>
+            <Paper sx={{mt: 3}}>
                 {houses != null && houses.length > 0 ?  (
                     <TableContainer id='tableContainerHouses'>
                     <Table>
@@ -285,5 +303,11 @@ export const Houses = () => {
                 </Dialog>
             </Paper>
         </Container>
+        ) : (
+        <Typography variant="h5" align="center">
+            Użytkownik nie posiada wymaganych uprawnień do przeglądania tej strony
+        </Typography>
+        )} 
+        </>
     )
 }
