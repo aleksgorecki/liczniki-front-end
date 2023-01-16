@@ -1,7 +1,7 @@
-import {Paper, Typography, Stack, Button, Box, TextField, Select, MenuItem} from '@mui/material';
+import {Paper, Typography, Stack, Button, Box, TextField, Select, MenuItem, Grid} from '@mui/material';
 import { Container } from '@mui/system';
 import { userType, getCurrentUser, setCurrentUser } from '../userType';
-import { useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import DatabaseErrorDialog from './databaseErrorDialog';
@@ -21,6 +21,7 @@ export const HouseDetails = () => {
     };
 
     const params = useParams();
+    const navigate = useNavigate();
     const houseId = params.id;
     const [houseName, setHouseName] = useState(null);
     const [waterMeter, setWaterMeter] = useState([]);
@@ -64,7 +65,6 @@ export const HouseDetails = () => {
             setActionsEnabled(true);
             setButtonEnabled(true);
         })};
-
 
     useEffect( () => {
         getHouseDetails();
@@ -219,6 +219,9 @@ export const HouseDetails = () => {
         setCurrentMeterType(meterType);
         setEditId(id);
         setMeterValue(value);
+        setButtonEnabled(true);
+        setTextFieldError(false);
+        setTextFieldErrorText(' ');
         setIsEditing(true);
     }
 
@@ -244,9 +247,13 @@ export const HouseDetails = () => {
                                 <TableCell align='center'>
                                     Wartość
                                 </TableCell>
-                                <TableCell align='center'>
-                                    Dostępne akcje
-                                </TableCell>
+                                {getCurrentUser() == userType.employee ? (
+                                    <TableCell align='center'>
+                                        Dostępne akcje
+                                    </TableCell>
+                                ) : (
+                                    null
+                                )}
                             </TableRow>   
                         </TableHead>
                         <TableBody>
@@ -261,14 +268,18 @@ export const HouseDetails = () => {
                                     <TableCell align='center'>
                                         {reading.value}
                                     </TableCell>
-                                    <TableCell align='center'>
-                                        <Button align='center' disabled={!actionsEnabled} variant='text' onClick={() => onClickEdit(reading.id, reading.value, meterType)} sx={{m: 0.5}}>
-                                            Edytuj
-                                        </Button>
-                                        <Button color='secondary' align='center' variant='text' disabled={!actionsEnabled} onClick={() => onClickDelete(reading.id, meterType)} sx={{m: 0.5}}>
-                                            Usuń
-                                        </Button>
-                                    </TableCell>
+                                    {getCurrentUser() === userType.employee ? (
+                                        <TableCell align='center'>
+                                            <Button align='center' disabled={!actionsEnabled} variant='text' onClick={() => onClickEdit(reading.id, reading.value, meterType)} sx={{m: 0.5}}>
+                                                Edytuj
+                                            </Button>
+                                            <Button color='secondary' align='center' variant='text' disabled={!actionsEnabled} onClick={() => onClickDelete(reading.id, meterType)} sx={{m: 0.5}}>
+                                                Usuń
+                                            </Button>
+                                        </TableCell>
+                                    ) : (
+                                        null
+                                    )}
                                 </TableRow>
                             )))}
                         </TableBody>
@@ -280,6 +291,17 @@ export const HouseDetails = () => {
 
     return(
         <Container maxWidth='md' sx={{ mb: 8 }}>
+            <>
+            <Button onClick={() => {
+                if (getCurrentUser() === userType.employee) {
+                    navigate('/houses')
+                }
+                else {
+                    navigate('/')
+                }
+            }}>
+                Powrót
+            </Button>
             {!notFound ? (
                 <>
                     <Paper sx={{p: 2}}>
@@ -287,7 +309,7 @@ export const HouseDetails = () => {
                             Odczyty dla {houseName} (Id {houseId})
                         </Typography>
                     </Paper>
-                    <Paper sx={{p: 2, mt: 3}}>
+                    {(getCurrentUser() === userType.employee) ? (<Paper sx={{p: 2, mt: 3}}>
                         <Box sx={{
                             display: 'flex',
                             flexDirection: 'row',
@@ -330,25 +352,25 @@ export const HouseDetails = () => {
                                     null
                                 )}
                         </Box>
-                    </Paper>
-                    <Stack direction='row' justifyContent='center' sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: 'flex-start',
-                    }}>
-                        <Paper sx={{p: 2, mt: 3, mr: 1.5, flexGrow: 1}}>
-                            <Typography variant='h6'>
-                                Woda
-                            </Typography>
-                            <MeterTable readings={waterMeter} meterType='water' sx={{mt: 1}}/>
-                        </Paper>
-                        <Paper sx={{p: 2, mt: 3, ml: 1.5, flexGrow: 1}}>
-                            <Typography variant='h6'>
-                                Prąd
-                            </Typography>
-                            <MeterTable readings={electricityMeter} meterType='electricity' sx={{mt: 1}}/>
-                        </Paper>
-                    </Stack>
+                    </Paper>) : (null) }
+                        <Grid container spacing={2} justifyContent='center' sx={{mt: 0}} >
+                            <Grid item xs={6}>
+                                <Paper>
+                                    <Typography variant='h6' m={1}>
+                                        Woda
+                                    </Typography>
+                                    <MeterTable readings={waterMeter} meterType='water' sx={{mt: 1}}/>
+                                </Paper>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Paper>
+                                    <Typography variant='h6' m={1}>
+                                        Prąd
+                                    </Typography>
+                                    <MeterTable readings={electricityMeter} meterType='electricity' sx={{mt: 1}}/>
+                                </Paper>
+                            </Grid>
+                        </Grid>
                 </>
                 ) : (
                     <Paper>
@@ -357,7 +379,8 @@ export const HouseDetails = () => {
                         </Typography>
                     </Paper>
                 )}
-            <DatabaseErrorDialog isOpen={open} handleClose={() => setOpen(false)} />
+                <DatabaseErrorDialog isOpen={open} handleClose={() => setOpen(false)} />
+            </>
         </Container>
     )
 }
